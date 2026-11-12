@@ -8,15 +8,18 @@ def set_file(name):
     t=U()
     acts.append(act("is.workflow.actions.gettext",{"UUID":t,"WFTextActionText":name}))
     acts.append(act("is.workflow.actions.setvariable",{"WFVariableName":"file","WFInput":att(t,"Text")}))
-A,B,C=U(),U(),U()
+A,H,M,C=U(),U(),U(),U()
 acts+= [act("is.workflow.actions.date",{"UUID":A,"WFDateActionMode":"Current Date"}),
-        act("is.workflow.actions.format.date",{"UUID":B,"WFDateFormatStyle":"Custom","WFDateFormat":"HHmm","WFDate":att(A,"Date")}),
-        act("is.workflow.actions.detect.number",{"UUID":C,"WFInput":att(B,"Formatted Date")})]
-branches=[("1030","today-breakfast"),("1630","today-lunch"),("2200","today-dinner")]
+        act("is.workflow.actions.properties.date",{"UUID":H,"WFContentItemPropertyName":"Hour","WFInput":att(A,"Date")}),
+        act("is.workflow.actions.properties.date",{"UUID":M,"WFContentItemPropertyName":"Minute","WFInput":att(A,"Date")}),
+        act("is.workflow.actions.calculateexpression",{"UUID":C,"Input":{"Value":{"string":"\uFFFC*60+\uFFFC",
+            "attachmentsByRange":{"{0, 1}":{"OutputUUID":H,"Type":"ActionOutput","OutputName":"Hour"},
+                                  "{5, 1}":{"OutputUUID":M,"Type":"ActionOutput","OutputName":"Minute"}}},"WFSerializationType":"WFTextTokenString"}})]
+branches=[("630","today-breakfast"),("990","today-lunch"),("1320","today-dinner")]
 groups=[U() for _ in branches]
 for (num,f),g in zip(branches,groups):
     acts.append(act("is.workflow.actions.conditional",{"GroupingIdentifier":g,"WFControlFlowMode":0,"WFCondition":0,"WFNumberValue":num,
-        "WFInput":{"Type":"Variable","Variable":att(C,"Numbers")}}))
+        "WFInput":{"Type":"Variable","Variable":att(C,"Calculation Result")}}))
     set_file(f)
     acts.append(act("is.workflow.actions.conditional",{"GroupingIdentifier":g,"WFControlFlowMode":1}))
 set_file("tomorrow-breakfast")
@@ -32,5 +35,5 @@ wf={"WFWorkflowActions":acts,"WFWorkflowClientVersion":"2607.0.2","WFWorkflowMin
     "WFWorkflowIcon":{"WFWorkflowIconStartColor":4271458815,"WFWorkflowIconGlyphNumber":59511},
     "WFWorkflowImportQuestions":[],"WFWorkflowInputContentItemClasses":[],"WFWorkflowTypes":[],"WFWorkflowHasShortcutInputVariables":False,
     "WFWorkflowOutputContentItemClasses":[],"WFQuickActionSurfaces":[]}
-open("/mnt/user-data/outputs/Suwannee2.shortcut","wb").write(plistlib.dumps(wf,fmt=plistlib.FMT_BINARY))
+open("/mnt/user-data/outputs/Suwannee3.shortcut","wb").write(plistlib.dumps(wf,fmt=plistlib.FMT_BINARY))
 print(len(acts),"actions")
