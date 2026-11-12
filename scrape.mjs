@@ -106,10 +106,16 @@ async function writeDay(prefix, day) {
   const label = day.dateLabel || prefix;
   const all = [];
   for (const meal of MEALS) {
-    const stations = day.results[meal];
-    const text = stations?.length ? format(meal, label, stations) : notServed(meal, label, day.available);
+    let stations = day.results[meal];
+    let shownMeal = meal;
+    // Weekends: no breakfast/lunch, but brunch covers both.
+    if (!stations?.length && (meal === "Breakfast" || meal === "Lunch") && day.results.Brunch?.length) {
+      stations = day.results.Brunch;
+      shownMeal = "Brunch";
+    }
+    const text = stations?.length ? format(shownMeal, label, stations) : notServed(meal, label, day.available);
     await writeFile(`${OUT}/${prefix}-${meal.toLowerCase()}.txt`, text);
-    if (stations?.length) all.push(text);
+    if (day.results[meal]?.length) all.push(text);
   }
   await writeFile(`${OUT}/${prefix}.txt`, all.length ? all.join("\n\n") : `No Suwannee menu posted for ${label}.\n`);
 }
