@@ -8,18 +8,16 @@ def set_file(name):
     t=U()
     acts.append(act("is.workflow.actions.gettext",{"UUID":t,"WFTextActionText":name}))
     acts.append(act("is.workflow.actions.setvariable",{"WFVariableName":"file","WFInput":att(t,"Text")}))
-A,H,M,C,X=U(),U(),U(),U(),U()
+A,S,C=U(),U(),U()
 acts+= [act("is.workflow.actions.date",{"UUID":A,"WFDateActionMode":"Current Date"}),
-        act("is.workflow.actions.properties.date",{"UUID":H,"WFContentItemPropertyName":"Hour","WFInput":att(A,"Date")}),
-        act("is.workflow.actions.properties.date",{"UUID":M,"WFContentItemPropertyName":"Minute","WFInput":att(A,"Date")}),
-        act("is.workflow.actions.math",{"UUID":X,"WFInput":att(H,"Hour"),"WFMathOperation":"×","WFMathOperand":60}),
-        act("is.workflow.actions.math",{"UUID":C,"WFInput":att(X,"Calculation Result"),"WFMathOperation":"+",
-            "WFMathOperand":att(M,"Minute")})]
+        act("is.workflow.actions.adjustdate",{"UUID":S,"WFAdjustOperation":"Get Start of Day","WFDate":att(A,"Date")}),
+        act("is.workflow.actions.gettimebetweendates",{"UUID":C,"WFInput":att(A,"Date"),
+            "WFTimeUntilFromDate":att(S,"Adjusted Date"),"WFTimeUntilUnit":"Minutes"})]
 branches=[("630","today-breakfast"),("990","today-lunch"),("1320","today-dinner")]
 groups=[U() for _ in branches]
 for (num,f),g in zip(branches,groups):
     acts.append(act("is.workflow.actions.conditional",{"GroupingIdentifier":g,"WFControlFlowMode":0,"WFCondition":0,"WFNumberValue":num,
-        "WFInput":{"Type":"Variable","Variable":att(C,"Calculation Result")}}))
+        "WFInput":{"Type":"Variable","Variable":att(C,"Time Between Dates")}}))
     set_file(f)
     acts.append(act("is.workflow.actions.conditional",{"GroupingIdentifier":g,"WFControlFlowMode":1}))
 set_file("tomorrow-breakfast")
@@ -35,5 +33,5 @@ wf={"WFWorkflowActions":acts,"WFWorkflowClientVersion":"2607.0.2","WFWorkflowMin
     "WFWorkflowIcon":{"WFWorkflowIconStartColor":4271458815,"WFWorkflowIconGlyphNumber":59511},
     "WFWorkflowImportQuestions":[],"WFWorkflowInputContentItemClasses":[],"WFWorkflowTypes":[],"WFWorkflowHasShortcutInputVariables":False,
     "WFWorkflowOutputContentItemClasses":[],"WFQuickActionSurfaces":[]}
-open("/mnt/user-data/outputs/Suwannee4.shortcut","wb").write(plistlib.dumps(wf,fmt=plistlib.FMT_BINARY))
+open("/mnt/user-data/outputs/Suwannee5.shortcut","wb").write(plistlib.dumps(wf,fmt=plistlib.FMT_BINARY))
 print(len(acts),"actions")
