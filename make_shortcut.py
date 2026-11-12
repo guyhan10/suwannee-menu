@@ -10,9 +10,9 @@ def set_file(name):
     acts.append(act("is.workflow.actions.setvariable",{"WFVariableName":"file","WFInput":att(t,"Text")}))
 A,S,C=U(),U(),U()
 acts+= [act("is.workflow.actions.date",{"UUID":A,"WFDateActionMode":"Current Date"}),
-        act("is.workflow.actions.adjustdate",{"UUID":S,"WFAdjustOperation":"Get Start of Day","WFDate":att(A,"Date")}),
-        act("is.workflow.actions.gettimebetweendates",{"UUID":C,"WFInput":att(A,"Date"),
-            "WFTimeUntilFromDate":att(S,"Adjusted Date"),"WFTimeUntilUnit":"Minutes"})]
+        act("is.workflow.actions.adjustdate",{"UUID":S,"WFAdjustOperation":"Get Start of Day","WFDate":tok({"OutputUUID":A,"Type":"ActionOutput","OutputName":"Date"})}),
+        act("is.workflow.actions.gettimebetweendates",{"UUID":C,"WFInput":tok({"OutputUUID":A,"Type":"ActionOutput","OutputName":"Date"}),
+            "WFTimeUntilFromDate":tok({"OutputUUID":S,"Type":"ActionOutput","OutputName":"Adjusted Date"}),"WFTimeUntilUnit":"Minutes"})]
 branches=[("630","today-breakfast"),("990","today-lunch"),("1320","today-dinner")]
 groups=[U() for _ in branches]
 for (num,f),g in zip(branches,groups):
@@ -33,5 +33,5 @@ wf={"WFWorkflowActions":acts,"WFWorkflowClientVersion":"2607.0.2","WFWorkflowMin
     "WFWorkflowIcon":{"WFWorkflowIconStartColor":4271458815,"WFWorkflowIconGlyphNumber":59511},
     "WFWorkflowImportQuestions":[],"WFWorkflowInputContentItemClasses":[],"WFWorkflowTypes":[],"WFWorkflowHasShortcutInputVariables":False,
     "WFWorkflowOutputContentItemClasses":[],"WFQuickActionSurfaces":[]}
-open("/mnt/user-data/outputs/Suwannee5.shortcut","wb").write(plistlib.dumps(wf,fmt=plistlib.FMT_BINARY))
+open("/mnt/user-data/outputs/Suwannee6.shortcut","wb").write(plistlib.dumps(wf,fmt=plistlib.FMT_BINARY))
 print(len(acts),"actions")
