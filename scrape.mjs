@@ -11,7 +11,8 @@ const OUT = "menu";
 const pageFns = () => {
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const heading = () =>
-    [...document.querySelectorAll("h2,h3")].find((e) => /Daily Menu/.test(e.textContent));
+    [...document.querySelectorAll("h2,h3")].find((e) => /Daily Menu/.test(e.textContent)) ||
+    [...document.querySelectorAll("h1")].find((e) => /Daily Menu/.test(e.textContent));
   const headingText = () => (heading()?.textContent || "").replace(/\s+/g, " ").trim();
 
   window.__availableMeals = async () => {
@@ -123,7 +124,8 @@ async function writeDay(prefix, day) {
 const browser = await chromium.launch();
 const page = await browser.newPage({ timezoneId: "America/New_York", viewport: { width: 1280, height: 900 } });
 await page.goto(URL, { waitUntil: "networkidle", timeout: 90000 });
-await page.waitForSelector("text=Daily Menu", { timeout: 60000 });
+await page.waitForFunction(() => /Daily Menu/.test(document.body.innerText + [...document.querySelectorAll("h1,h2,h3")].map((e) => e.textContent).join(" ")), null, { timeout: 60000 });
+await page.waitForTimeout(3000);
 await page.evaluate(pageFns);
 await mkdir(OUT, { recursive: true });
 
