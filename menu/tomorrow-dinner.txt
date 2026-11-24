@@ -9,16 +9,16 @@ GLOBAL SOLUTIONS
 • Sweet Plantain
 
 HOMESTYLE
-• Korean BBQ Pork
+• Chicken and Ham Jambalaya
+• Southwest Green Beans
 • California Blend Vegetables
-• Green Bean Mushroom Stir Fry
 • Teriyaki Vegetable Lo Mein
 • Baked Sweet Potato
 
 GRILL
 • Char-Grilled Turkey Burger
 • Cheeseburger
-• Shredded Pork & Slaw Biscuit
+• BBQ Chicken & Cheddar Biscuit
 • Crispy Shoestring French Fries
 
 PIZZA
@@ -50,7 +50,7 @@ VEGAN STATION
 • Mexican Black Bean Salad
 
 TRUE BALANCE
-• BBQ Spiced Shredded Chicken
+• Herb Roasted Pork Loin
 • Snow Pea Veggie Mix
 • Zucchini & Yellow Squash Saute
 • Smashed Red Potatoes
